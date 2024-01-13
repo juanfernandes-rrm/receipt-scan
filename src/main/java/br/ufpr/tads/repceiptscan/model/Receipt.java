@@ -15,7 +15,7 @@ public class Receipt {
     private String paymentMethod;
     private BigDecimal valuePaid;
     private BigDecimal tax;
-    private generalInformation generalInformation;
+    private GeneralInformation generalInformation;
     private String accessKey;
 
 }

@@ -1,4 +1,4 @@
-package br.ufpr.tads.repceiptscan.dto;
+package br.ufpr.tads.repceiptscan.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;

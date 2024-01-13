@@ -1,6 +1,6 @@
 package br.ufpr.tads.repceiptscan.controller;
 
-import br.ufpr.tads.repceiptscan.dto.ReceiptRequestDTO;
+import br.ufpr.tads.repceiptscan.dto.request.ReceiptRequestDTO;
 import br.ufpr.tads.repceiptscan.service.ReceiptScanService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
