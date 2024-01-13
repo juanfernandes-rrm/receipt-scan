@@ -5,12 +5,16 @@ import br.ufpr.tads.repceiptscan.utils.FormatValues;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public class ReceiptMapper {
 
-    private FormatValues formatValues = new FormatValues();
+    @Autowired
+    private FormatValues formatValues;
 
     private static final String SECTION_CONTENT = "div#conteudo";
     private static final String SECTION_STORE = SECTION_CONTENT + " > div:nth-child(2)";

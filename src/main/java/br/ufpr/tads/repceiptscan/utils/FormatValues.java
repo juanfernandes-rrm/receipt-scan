@@ -1,9 +1,12 @@
 package br.ufpr.tads.repceiptscan.utils;
 
+import org.springframework.stereotype.Component;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+@Component
 public class FormatValues {
 
     private static final String NON_BREAKING_SPACE = "&nbsp;";
