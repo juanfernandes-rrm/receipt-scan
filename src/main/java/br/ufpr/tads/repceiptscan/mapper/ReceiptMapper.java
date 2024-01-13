@@ -45,7 +45,7 @@ public class ReceiptMapper {
 
     private List<ItemDTO> mapItems(List<Item> items) {
         List<ItemDTO> itemDTOS = new ArrayList<>();
-        items.stream().forEach(item -> {
+        items.forEach(item -> {
             ItemDTO itemDTO = new ItemDTO();
             itemDTO.setName(item.getName());
             itemDTO.setCode(item.getCode());
