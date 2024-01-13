@@ -29,7 +29,7 @@ public class ReceiptURLValidate {
     }
 
     private void validateConnection(String url){
-        HttpURLConnection connection = null;
+        HttpURLConnection connection;
         int responseCode;
         try {
             connection = (HttpURLConnection) new URL(url).openConnection();

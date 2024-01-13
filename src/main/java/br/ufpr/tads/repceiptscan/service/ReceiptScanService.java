@@ -33,7 +33,7 @@ public class ReceiptScanService {
         receiptURLValidate.validate(receiptRequestDTO);
 
         HttpURLConnection connection = pageConnectionFactory.getConnection(receiptRequestDTO.getUrl());
-        String html = null;
+        String html;
         try {
             html = htmlReader.getHTML(connection.getInputStream());
         } catch (IOException e) {

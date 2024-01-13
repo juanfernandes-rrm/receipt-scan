@@ -11,9 +11,8 @@ import java.net.URL;
 public class PageConnectionFactory {
 
     public HttpURLConnection getConnection(String URL){
-        URL obj = null;
         try {
-            obj = new URL(URL);
+            URL obj = new URL(URL);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
             con.setRequestProperty("User-Agent", "Mozilla/5.0");
             System.out.println("Response code: " + con.getResponseCode());

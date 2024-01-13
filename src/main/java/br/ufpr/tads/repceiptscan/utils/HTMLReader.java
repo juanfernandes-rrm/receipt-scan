@@ -15,8 +15,7 @@ public class HTMLReader {
             BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
             String inputLine;
             StringBuilder response = new StringBuilder();
-            while (true) {
-                if (!((inputLine = in.readLine()) != null)) break;
+            while ((inputLine = in.readLine()) != null) {
                 response.append(inputLine);
             }
             in.close();
