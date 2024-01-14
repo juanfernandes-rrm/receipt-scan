@@ -37,12 +37,17 @@ public class ReceiptScanService {
     @Autowired
     private ReceiptMapper receiptMapper;
 
+    @Autowired
+    private RabbitMQService rabbitMQService;
+
     public ReceiptResponseDTO scan(ReceiptRequestDTO receiptRequestDTO) {
         receiptURLValidate.validate(receiptRequestDTO.getUrl());
         HttpURLConnection connection = pageConnectionFactory.getConnection(receiptRequestDTO.getUrl());
         Document document = getDocument(connection);
         pageValidate.validatePage(document);
-        return receiptMapper.map(receiptPageMapper.map(document));
+        ReceiptResponseDTO responseDTO = receiptMapper.map(receiptPageMapper.map(document));
+        rabbitMQService.sendMessage("scan", responseDTO);
+        return responseDTO;
     }
 
     private Document getDocument(HttpURLConnection connection) {
