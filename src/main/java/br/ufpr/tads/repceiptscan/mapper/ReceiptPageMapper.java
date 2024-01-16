@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class ReceiptPageMapper {
@@ -48,8 +49,8 @@ public class ReceiptPageMapper {
     public Receipt map(Document document) {
         Receipt receipt = new Receipt();
 
-        Elements itens = document.select(TBODY_ITEMS).first().children();
-        mapItems(receipt, itens);
+        Elements items = getElements(document, TBODY_ITEMS);
+        mapItems(receipt, items);
         mapStore(receipt, document);
         mapTotalReceipt(receipt, document);
         mapGeneralInformation(receipt, document);
@@ -65,12 +66,12 @@ public class ReceiptPageMapper {
 
     private Item mapItem(Element elementItem) {
         Item item = new Item();
-        item.setName(elementItem.select(CLASS_NAME).first().text());
-        item.setCode(extractItemCode(elementItem.select(CLASS_CODE).first().text()));
-        item.setAmount(formatValues.formatDecimalValue(elementItem.select(CLASS_AMOUNT).first().childNodes().get(2).toString()));
-        item.setUnit(elementItem.select(CLASS_UNIT).first().childNodes().get(2).toString().trim());
-        item.setUnitValue(formatValues.formatDecimalValue(elementItem.select(CLASS_UNIT_VALUE).first().childNodes().get(2).toString()));
-        item.setTotalValue(formatValues.formatDecimalValue(elementItem.select(CLASS_TOTAL_VALUE).first().text()));
+        item.setName(getElement(elementItem, CLASS_NAME).text());
+        item.setCode(extractItemCode(getElement(elementItem, CLASS_CODE).text()));
+        item.setAmount(formatValues.formatDecimalValue(getElement(elementItem, CLASS_AMOUNT).childNodes().get(2).toString()));
+        item.setUnit(getElement(elementItem, CLASS_UNIT).childNodes().get(2).toString().trim());
+        item.setUnitValue(formatValues.formatDecimalValue(getElement(elementItem, CLASS_UNIT_VALUE).childNodes().get(2).toString()));
+        item.setTotalValue(formatValues.formatDecimalValue(getElement(elementItem, CLASS_TOTAL_VALUE).text()));
         return item;
     }
 
@@ -93,15 +94,15 @@ public class ReceiptPageMapper {
 
     private void mapGeneralInformation(Receipt receipt, Document document) {
         GeneralInformation generalInformation = new GeneralInformation();
-        generalInformation.setNumber(document.select(INFORMATION_NUMBER).first().nextSibling().toString().trim());
-        generalInformation.setSeries(document.select(INFORMATION_SERIES).first().nextSibling().toString().trim());
-        generalInformation.setIssuance(extractIssuance(document.select(INFORMATION_ISSUANCE).first().nextSibling().toString()));
-        generalInformation.setAuthorizationProtocol(extractAuthorizationProtocol(document.select(INFORMATION_PROTOCOL).first().nextSibling().toString()));
+        generalInformation.setNumber(getNextTextNodeFrom(document, INFORMATION_NUMBER));
+        generalInformation.setSeries(getNextTextNodeFrom(document, INFORMATION_SERIES));
+        generalInformation.setIssuance(extractIssuance(getNextTextNodeFrom(document, INFORMATION_ISSUANCE)));
+        generalInformation.setAuthorizationProtocol(extractAuthorizationProtocol(getNextTextNodeFrom(document, INFORMATION_PROTOCOL)));
         receipt.setGeneralInformation(generalInformation);
     }
 
     private void mapAccessKey(Receipt receipt, Document document) {
-        receipt.setAccessKey(document.select(SPAN_ACCESS_KEY).first().text());
+        receipt.setAccessKey(getElement(document, SPAN_ACCESS_KEY).text());
     }
 
     private String extractItemCode(String codeString) {
@@ -133,6 +134,29 @@ public class ReceiptPageMapper {
         authorizationProtocol.setCode(split[0]);
         authorizationProtocol.setDate(formatValues.formatDateTime(split[1] + split[2]));
         return authorizationProtocol;
+    }
+
+    private Element getElement(Element element, String select) {
+        return Optional.ofNullable(element.select(select).first())
+                .orElseThrow(() -> new RuntimeException("Element not found"));
+    }
+
+    private Element getElement(Document document, String select) {
+        return Optional.ofNullable(document.select(select).first())
+                .orElseThrow(() -> new RuntimeException("Element not found"));
+    }
+
+    private Elements getElements(Document document, String select) {
+        return Optional.ofNullable(document.select(select).first())
+                .map(Element::children)
+                .orElseThrow(() -> new RuntimeException("Element not found or has no children"));
+    }
+
+    private String getNextTextNodeFrom(Document document, String select) {
+        Element element = getElement(document, select);
+        return Optional.ofNullable(element.nextSibling())
+                .map(text -> text.toString().trim())
+                .orElseThrow(() -> new RuntimeException("Text node not found"));
     }
 
 }
