@@ -8,12 +8,10 @@ import br.ufpr.tads.repceiptscan.utils.HTMLReader;
 import br.ufpr.tads.repceiptscan.utils.PageConnectionFactory;
 import br.ufpr.tads.repceiptscan.utils.PageValidate;
 import br.ufpr.tads.repceiptscan.utils.ReceiptURLValidate;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.net.HttpURLConnection;
 
 @Service
@@ -42,22 +40,15 @@ public class ReceiptScanService {
 
     public ReceiptResponseDTO scan(ReceiptRequestDTO receiptRequestDTO) {
         receiptURLValidate.validate(receiptRequestDTO.getUrl());
+
         HttpURLConnection connection = pageConnectionFactory.getConnection(receiptRequestDTO.getUrl());
-        Document document = getDocument(connection);
+        Document document = htmlReader.getDocument(connection);
+
         pageValidate.validatePage(document);
+
         ReceiptResponseDTO responseDTO = receiptMapper.map(receiptPageMapper.map(document));
         rabbitMQService.sendMessage("scan", responseDTO);
         return responseDTO;
-    }
-
-    private Document getDocument(HttpURLConnection connection) {
-        String html;
-        try {
-            html = htmlReader.getHTML(connection.getInputStream());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return Jsoup.parse(html);
     }
 
 }
