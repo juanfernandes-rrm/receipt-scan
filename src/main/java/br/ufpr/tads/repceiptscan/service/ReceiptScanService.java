@@ -4,6 +4,7 @@ import br.ufpr.tads.repceiptscan.dto.request.ReceiptRequestDTO;
 import br.ufpr.tads.repceiptscan.dto.response.ReceiptResponseDTO;
 import br.ufpr.tads.repceiptscan.mapper.ReceiptMapper;
 import br.ufpr.tads.repceiptscan.mapper.ReceiptPageMapper;
+import br.ufpr.tads.repceiptscan.service.messaging.RabbitPublisher;
 import br.ufpr.tads.repceiptscan.utils.HTMLReader;
 import br.ufpr.tads.repceiptscan.utils.PageConnectionFactory;
 import br.ufpr.tads.repceiptscan.utils.PageValidate;
@@ -36,7 +37,7 @@ public class ReceiptScanService {
     private ReceiptMapper receiptMapper;
 
     @Autowired
-    private RabbitMQService rabbitMQService;
+    private RabbitPublisher rabbitPublisher;
 
     public ReceiptResponseDTO scan(ReceiptRequestDTO receiptRequestDTO) {
         receiptURLValidate.validate(receiptRequestDTO.getUrl());
@@ -47,7 +48,7 @@ public class ReceiptScanService {
         pageValidate.validatePage(document);
 
         ReceiptResponseDTO responseDTO = receiptMapper.map(receiptPageMapper.map(document));
-        rabbitMQService.sendMessage("scan", responseDTO);
+        rabbitPublisher.publish(responseDTO);
         return responseDTO;
     }
 
