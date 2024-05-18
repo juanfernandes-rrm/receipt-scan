@@ -4,17 +4,16 @@ import br.ufpr.tads.repceiptscan.dto.request.ReceiptRequestDTO;
 import br.ufpr.tads.repceiptscan.dto.response.ReceiptResponseDTO;
 import br.ufpr.tads.repceiptscan.mapper.ReceiptMapper;
 import br.ufpr.tads.repceiptscan.mapper.ReceiptPageMapper;
-import br.ufpr.tads.repceiptscan.service.messaging.RabbitPublisher;
 import br.ufpr.tads.repceiptscan.model.Receipt;
 import br.ufpr.tads.repceiptscan.model.Store;
 import br.ufpr.tads.repceiptscan.repository.*;
+import br.ufpr.tads.repceiptscan.service.messaging.RabbitPublisher;
 import br.ufpr.tads.repceiptscan.utils.HTMLReader;
 import br.ufpr.tads.repceiptscan.utils.PageConnectionFactory;
 import br.ufpr.tads.repceiptscan.utils.PageValidate;
 import br.ufpr.tads.repceiptscan.utils.ReceiptURLValidate;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.net.HttpURLConnection;
