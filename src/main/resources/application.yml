@@ -17,3 +17,19 @@ spring:
     console:
       enabled: true
       path: /h2-console
+    addresses: ${amqpURL:amqp://guest:guest@localhost}
+
+broker:
+  prefix: default
+  queues:
+    receipt:
+      name: ${broker.prefix}.receipt-scan
+  exchanges:
+    receipt:
+      name: direct.receipt-scan
+      type: direct
+  bindings:
+    receipt:
+      exchange: ${broker.exchanges.receipt.name}
+      queue: ${broker.queues.receipt.name}
+      routingKey: ${broker.queues.receipt.name}
