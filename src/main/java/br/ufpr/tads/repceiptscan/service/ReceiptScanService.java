@@ -73,7 +73,7 @@ public class ReceiptScanService {
 
         Receipt receipt = saveReceipt(receiptPageMapper.map(document));
         ReceiptResponseDTO responseDTO = receiptMapper.map(receipt);
-        rabbitPublisher.publish(responseDTO);
+        rabbitPublisher.publish(receipt);
         return responseDTO;
     }
 
