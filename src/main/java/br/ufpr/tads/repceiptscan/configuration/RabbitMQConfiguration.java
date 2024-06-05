@@ -17,27 +17,27 @@ public class RabbitMQConfiguration {
     @Autowired
     private AmqpAdmin amqpAdmin;
 
-    private Queue createQueue(String name) {
-        return new Queue(name, true, false, false);
-    }
-
-    private DirectExchange createExchange() {
-        return new DirectExchange(NAME_EXCHANGE);
-    }
-
-    private Binding createBinding(Queue queue, DirectExchange exchange) {
-        return new Binding(queue.getName(), Binding.DestinationType.QUEUE, exchange.getName(), queue.getName(), null);
-    }
-
-    @PostConstruct
-    private void createQueue() {
-        Queue scanQueue = createQueue(NAME_QUEUE);
-        DirectExchange directExchange = createExchange();
-        Binding binding = createBinding(scanQueue, directExchange);
-
-        amqpAdmin.declareQueue(scanQueue);
-        amqpAdmin.declareExchange(directExchange);
-        amqpAdmin.declareBinding(binding);
-    }
+//    private Queue createQueue(String name) {
+//        return new Queue(name, true, false, false);
+//    }
+//
+//    private DirectExchange createExchange() {
+//        return new DirectExchange(NAME_EXCHANGE);
+//    }
+//
+//    private Binding createBinding(Queue queue, DirectExchange exchange) {
+//        return new Binding(queue.getName(), Binding.DestinationType.QUEUE, exchange.getName(), queue.getName(), null);
+//    }
+//
+//    @PostConstruct
+//    private void createQueue() {
+//        Queue scanQueue = createQueue(NAME_QUEUE);
+//        DirectExchange directExchange = createExchange();
+//        Binding binding = createBinding(scanQueue, directExchange);
+//
+//        amqpAdmin.declareQueue(scanQueue);
+//        amqpAdmin.declareExchange(directExchange);
+//        amqpAdmin.declareBinding(binding);
+//    }
 
 }

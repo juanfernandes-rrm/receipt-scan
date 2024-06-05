@@ -73,7 +73,7 @@ public class ReceiptScanService {
 
         Receipt receipt = saveReceipt(receiptPageMapper.map(document));
         ReceiptResponseDTO responseDTO = receiptMapper.map(receipt);
-        rabbitMQService.sendMessage("scan", responseDTO);
+//        rabbitMQService.sendMessage("scan", responseDTO);
         return responseDTO;
     }
 
