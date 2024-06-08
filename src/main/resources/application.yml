@@ -1,3 +1,6 @@
+server:
+  port: 8082
+
 spring:
   rabbitmq:
     host: localhost
@@ -5,14 +8,17 @@ spring:
     username: guest
     password: guest
   datasource:
-    url: jdbc:h2:mem:testdb
-    driverClassName: org.h2.Driver
-    username: sa
-    password: password
+    url: jdbc:mysql://localhost:3306/scan_db
+    username: root
+    password: my-secret-pw
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
   h2:
     console:
       enabled: true
@@ -24,12 +30,30 @@ broker:
   queues:
     receipt:
       name: ${broker.prefix}.receipt-scan
+    catalog:
+      name: ${broker.prefix}.product
+    user:
+      name: ${broker.prefix}.store
   exchanges:
     receipt:
       name: direct.receipt-scan
+      type: direct
+    catalog:
+      name: direct.catalog
+      type: direct
+    user:
+      name: direct.user
       type: direct
   bindings:
     receipt:
       exchange: ${broker.exchanges.receipt.name}
       queue: ${broker.queues.receipt.name}
       routingKey: ${broker.queues.receipt.name}
+    catalog:
+      exchange: ${broker.exchanges.catalog.name}
+      queue: ${broker.queues.catalog.name}
+      routingKey: ${broker.queues.catalog.name}
+    user:
+      exchange: ${broker.exchanges.user.name}
+      queue: ${broker.queues.user.name}
+      routingKey: ${broker.queues.user.name}
