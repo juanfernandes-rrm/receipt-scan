@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
@@ -23,39 +24,57 @@ public class RabbitMqConfiguration {
     private final List<Exchange> definedExchanges = new ArrayList<>();
 
     @Bean
-    public Declarables queues() {
-        if (brokerConfig == null || brokerConfig.getQueues() == null) {
-            return new Declarables();
-        }
-
-        var queueList = brokerConfig.getQueues().values().stream()
-                .filter(Objects::nonNull)
-                .map(queueProperties -> new Queue(queueProperties.getName(), true))
-                .toList();
-
-        definedQueues.addAll(queueList);
-        log.info("Declared queues");
-        return new Declarables(queueList);
+    public RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory) {
+        RabbitAdmin rabbitAdmin = new RabbitAdmin(connectionFactory);
+        rabbitAdmin.setAutoStartup(true); // Ensure it starts with the application
+        return rabbitAdmin;
     }
 
     @Bean
-    public Declarables exchanges() {
-        if (brokerConfig == null || brokerConfig.getExchanges() == null) {
-            return new Declarables();
+    public Declarables declareQueuesAndExchanges(RabbitAdmin rabbitAdmin) {
+        List<Declarable> declarables = new ArrayList<>();
+
+        if (brokerConfig != null && brokerConfig.getQueues() != null) {
+            var queueList = brokerConfig.getQueues().values().stream()
+                    .filter(Objects::nonNull)
+                    .map(queueProperties -> new Queue(queueProperties.getName(), true))
+                    .toList();
+
+            definedQueues.addAll(queueList);
+            queueList.forEach(rabbitAdmin::declareQueue);
+            log.info("Declared queues: {}", queueList);
+            declarables.addAll(queueList);
         }
 
-        var exchangesList = brokerConfig.getExchanges().values().stream()
-                .filter(Objects::nonNull)
-                .map(exchangeProperties -> new DirectExchange(exchangeProperties.getName())) // todo use correct exchange type
-                .toList();
+        if (brokerConfig != null && brokerConfig.getExchanges() != null) {
+            var exchangesList = brokerConfig.getExchanges().values().stream()
+                    .filter(Objects::nonNull)
+                    .map(exchangeProperties -> {
+                        switch (exchangeProperties.getType().toLowerCase()) {
+                            case "topic":
+                                return new TopicExchange(exchangeProperties.getName());
+                            case "fanout":
+                                return new FanoutExchange(exchangeProperties.getName());
+                            case "headers":
+                                return new HeadersExchange(exchangeProperties.getName());
+                            case "direct":
+                            default:
+                                return new DirectExchange(exchangeProperties.getName());
+                        }
+                    })
+                    .toList();
 
-        definedExchanges.addAll(exchangesList);
-        log.info("Declared exchanges");
-        return new Declarables(exchangesList);
+            definedExchanges.addAll(exchangesList);
+            exchangesList.forEach(rabbitAdmin::declareExchange);
+            log.info("Declared exchanges: {}", exchangesList);
+            declarables.addAll(exchangesList);
+        }
+
+        return new Declarables(declarables);
     }
 
     @Bean
-    public Declarables bindings() {
+    public Declarables declareBindings(RabbitAdmin rabbitAdmin) {
         if (brokerConfig == null || brokerConfig.getBindings() == null) {
             return new Declarables();
         }
@@ -67,12 +86,21 @@ public class RabbitMqConfiguration {
                     Queue queue = findQueueByName(bindingProperties.getQueue());
                     Exchange exchange = findExchangeByName(bindingProperties.getExchange());
 
+                    if (queue == null || exchange == null) {
+                        log.warn("Queue or Exchange not found for binding: {} - {}", bindingProperties.getQueue(), bindingProperties.getExchange());
+                        return null;
+                    }
+
                     return BindingBuilder.bind(queue)
                             .to(exchange)
                             .with(bindingProperties.getRoutingKey())
                             .noargs();
                 })
+                .filter(Objects::nonNull)
                 .toList();
+
+        bindingsList.forEach(rabbitAdmin::declareBinding);
+        log.info("Declared bindings: {}", bindingsList);
         return new Declarables(bindingsList);
     }
 
@@ -82,7 +110,7 @@ public class RabbitMqConfiguration {
     }
 
     @Bean
-    public AmqpTemplate amqpTemplate(ConnectionFactory connectionFactory){
+    public AmqpTemplate amqpTemplate(ConnectionFactory connectionFactory) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setMessageConverter(messageConverter());
         return rabbitTemplate;
@@ -101,6 +129,5 @@ public class RabbitMqConfiguration {
                 .findFirst()
                 .orElse(null);
     }
-
 }
 
