@@ -17,7 +17,7 @@ public class ReceiptMapper {
         responseDTO.setItems(mapItems(receipt.getItems()));
         responseDTO.setTotalItems(receipt.getTotalItems());
         responseDTO.setTotalValue(receipt.getTotalValue());
-        responseDTO.setPaymentMethod(receipt.getPaymentMethod());
+        responseDTO.setPaymentMethod(receipt.getPaymentMethod().name());
         responseDTO.setValuePaid(receipt.getValuePaid());
         responseDTO.setTax(receipt.getTax());
         responseDTO.setGeneralInformation(mapGeneralInformation(receipt.getGeneralInformation()));
@@ -27,6 +27,7 @@ public class ReceiptMapper {
 
     private StoreDTO mapStore(Store store) {
         StoreDTO storeDTO = new StoreDTO();
+        storeDTO.setId(store.getId());
         storeDTO.setName(store.getName());
         storeDTO.setCNPJ(store.getCNPJ());
         storeDTO.setAddress(mapAddress(store.getAddress()));
@@ -38,8 +39,8 @@ public class ReceiptMapper {
         addressDTO.setStreet(address.getStreet());
         addressDTO.setNumber(address.getNumber());
         addressDTO.setNeighborhood(address.getNeighborhood());
-        addressDTO.setCity(address.getCity());
-        addressDTO.setState(address.getState());
+        addressDTO.setCity(address.getCity().getName());
+        addressDTO.setState(address.getCity().getState().name());
         return addressDTO;
     }
 

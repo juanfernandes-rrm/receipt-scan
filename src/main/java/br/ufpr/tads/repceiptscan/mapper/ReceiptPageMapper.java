@@ -46,6 +46,8 @@ public class ReceiptPageMapper {
     public static final String INFORMATION_ISSUANCE = SECTION_INFORMATION + " > div:nth-child(1) > ul > li > strong:nth-child(6)";
     public static final String INFORMATION_PROTOCOL = SECTION_INFORMATION + " > div:nth-child(1) > ul > li > strong:nth-child(9)";
 
+    public static final String REGEX_TO_REMOVE_CNPJ_MASK = "[^0-9]";
+
     public Receipt map(Document document) {
         Receipt receipt = new Receipt();
 
@@ -78,7 +80,7 @@ public class ReceiptPageMapper {
     private void mapStore(Receipt receipt, Document document) {
         Store store = new Store();
         store.setName(document.select(STORE_NAME).text());
-        store.setCNPJ(document.select(STORE_CNPJ).text().replace("CNPJ: ", ""));
+        store.setCNPJ(document.select(STORE_CNPJ).text().replace("CNPJ: ", "").replaceAll(REGEX_TO_REMOVE_CNPJ_MASK, ""));
         store.setAddress(extractAddress(document.select(STORE_ADDRESS).text()));
 
         receipt.setStore(store);
@@ -88,7 +90,7 @@ public class ReceiptPageMapper {
         receipt.setTotalItems(Integer.parseInt(document.select(TOTAL_RECEIPT_TOTAL_ITEMS).text()));
         receipt.setValuePaid(formatValues.formatDecimalValue(document.select(TOTAL_RECEIPT_VALUE_PAID).text()));
         receipt.setTotalValue(formatValues.formatDecimalValue(document.select(TOTAL_RECEIPT_TOTAL_VALUE).text()));
-        receipt.setPaymentMethod(document.select(TOTAL_RECEIPT_PAYMENT_METHOD).text());
+        receipt.setPaymentMethod(PaymentMethod.fromValue(document.select(TOTAL_RECEIPT_PAYMENT_METHOD).text()));
         receipt.setTax(formatValues.formatDecimalValue(document.select(TOTAL_RECEIPT_TAX).text()));
     }
 
@@ -115,9 +117,15 @@ public class ReceiptPageMapper {
         address.setStreet(split[0]);
         address.setNumber(split[1]);
         address.setNeighborhood(split[3]);
-        address.setCity(split[4]);
-        address.setState(split[5]);
+        address.setCity(extractCity(split[4], split[5]));
         return address;
+    }
+
+    private City extractCity(String cityName, String stateName) {
+        City city = new City();
+        city.setName(cityName);
+        city.setState(StateEnum.valueOf(stateName));
+        return city;
     }
 
     private Issuance extractIssuance(String issuanceString) {
