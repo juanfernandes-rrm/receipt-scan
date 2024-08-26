@@ -4,6 +4,7 @@ import br.ufpr.tads.repceiptscan.dto.request.ReceiptRequestDTO;
 import br.ufpr.tads.repceiptscan.dto.response.ReceiptResponseDTO;
 import br.ufpr.tads.repceiptscan.mapper.ReceiptMapper;
 import br.ufpr.tads.repceiptscan.mapper.ReceiptPageMapper;
+import br.ufpr.tads.repceiptscan.model.Address;
 import br.ufpr.tads.repceiptscan.model.Receipt;
 import br.ufpr.tads.repceiptscan.model.Store;
 import br.ufpr.tads.repceiptscan.repository.*;
@@ -52,6 +53,9 @@ public class ReceiptScanService {
     private AddressRepository addressRepository;
 
     @Autowired
+    private CityRepository cityRepository;
+
+    @Autowired
     private ItemRepository itemRepository;
 
     @Autowired
@@ -79,13 +83,18 @@ public class ReceiptScanService {
 
     private Receipt saveReceipt(Receipt receipt){
         Store store = receipt.getStore();
-        addressRepository.save(store.getAddress());
+        saveAddress(store.getAddress());
         storeRepository.save(store);
         receipt.getItems().forEach(item -> itemRepository.save(item));
         authorizationProtocolRepository.save(receipt.getGeneralInformation().getAuthorizationProtocol());
         issuanceRepository.save(receipt.getGeneralInformation().getIssuance());
         generalInformationRepository.save(receipt.getGeneralInformation());
         return receiptRepository.save(receipt);
+    }
+
+    private void saveAddress(Address address){
+        cityRepository.save(address.getCity());
+        addressRepository.save(address);
     }
 
 }

@@ -7,17 +7,17 @@ import java.util.UUID;
 
 @Data
 @Entity
-@Table(name = "STORE")
-public class Store {
-
+@Table(name = "CITY")
+public class City {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    @Column(length = 100)
+
+    @Column(length = 150)
     private String name;
-    @Column(length = 14)
-    private String CNPJ;
-    @OneToOne
-    private Address address;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 50, nullable = false)
+    private StateEnum state;
 
 }

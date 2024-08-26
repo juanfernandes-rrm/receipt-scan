@@ -14,6 +14,7 @@ public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+    @Column(length = 150)
     private String name;
     private String code;
     private BigDecimal amount;

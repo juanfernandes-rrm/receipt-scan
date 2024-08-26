@@ -56,8 +56,8 @@ public class RabbitPublisher implements MessagePublisher {
         storeDTO.setName(store.getName());
 
         AddressDTO addressDTO = new AddressDTO();
-        addressDTO.setCity(store.getAddress().getCity());
-        addressDTO.setState(store.getAddress().getState());
+        addressDTO.setCity(store.getAddress().getCity().getName());
+        addressDTO.setState(store.getAddress().getCity().getState().name());
         addressDTO.setNeighborhood(store.getAddress().getNeighborhood());
         addressDTO.setStreet(store.getAddress().getStreet());
         addressDTO.setNumber(store.getAddress().getNumber());

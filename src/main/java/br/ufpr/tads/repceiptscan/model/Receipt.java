@@ -22,7 +22,7 @@ public class Receipt {
     private List<Item> items;
     private Integer totalItems;
     private BigDecimal totalValue;
-    private String paymentMethod;
+    private PaymentMethod paymentMethod;
     private BigDecimal valuePaid;
     private BigDecimal tax;
     @OneToOne
