@@ -1,7 +1,6 @@
 package br.ufpr.tads.repceiptscan.repository;
 
 import br.ufpr.tads.repceiptscan.model.Item;
-import br.ufpr.tads.repceiptscan.model.ItemDetails;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

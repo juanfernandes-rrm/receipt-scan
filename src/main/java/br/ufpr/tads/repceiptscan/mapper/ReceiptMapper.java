@@ -14,7 +14,7 @@ public class ReceiptMapper {
         ReceiptResponseDTO responseDTO = new ReceiptResponseDTO();
 
         responseDTO.setStore(mapStore(receipt.getStore()));
-        responseDTO.setItems(mapItems(receipt.getItems()));
+        responseDTO.setItems(mapItems(receipt.getItemDetails()));
         responseDTO.setTotalItems(receipt.getTotalItems());
         responseDTO.setTotalValue(receipt.getTotalValue());
         responseDTO.setPaymentMethod(receipt.getPaymentMethod().name());
@@ -44,12 +44,12 @@ public class ReceiptMapper {
         return addressDTO;
     }
 
-    private List<ItemDTO> mapItems(List<Item> items) {
+    private List<ItemDTO> mapItems(List<ItemDetails> items) {
         List<ItemDTO> itemDTOS = new ArrayList<>();
         items.forEach(item -> {
             ItemDTO itemDTO = new ItemDTO();
-            itemDTO.setName(item.getName());
-            itemDTO.setCode(item.getCode());
+            itemDTO.setName(item.getItem().getName());
+            itemDTO.setCode(item.getItem().getCode());
             itemDTO.setAmount(item.getAmount());
             itemDTO.setUnit(item.getUnit());
             itemDTO.setUnitValue(item.getUnitValue());
