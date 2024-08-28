@@ -15,7 +15,7 @@ public class Store {
     private UUID id;
     @Column(length = 100)
     private String name;
-    @Column(length = 14)
+    @Column(length = 14, unique = true)
     private String CNPJ;
     @OneToOne
     private Address address;

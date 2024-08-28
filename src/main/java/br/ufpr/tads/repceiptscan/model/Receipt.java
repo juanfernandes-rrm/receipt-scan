@@ -17,9 +17,8 @@ public class Receipt {
     private UUID id;
     @ManyToOne
     private Store store;
-    @ManyToMany
-    @JoinTable(name = "ITEMS_RECEIPT")
-    private List<Item> items;
+    @OneToMany(mappedBy = "receipt", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ItemDetails> itemDetails;
     private Integer totalItems;
     private BigDecimal totalValue;
     private PaymentMethod paymentMethod;

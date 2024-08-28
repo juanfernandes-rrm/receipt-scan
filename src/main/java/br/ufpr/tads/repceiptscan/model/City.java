@@ -7,7 +7,9 @@ import java.util.UUID;
 
 @Data
 @Entity
-@Table(name = "CITY")
+@Table(name = "CITY", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"name", "state"})
+})
 public class City {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

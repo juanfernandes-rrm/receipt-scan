@@ -17,9 +17,5 @@ public class Item {
     @Column(length = 150)
     private String name;
     private String code;
-    private BigDecimal amount;
-    private String unit;
-    private BigDecimal unitValue;
-    private BigDecimal totalValue;
 
 }
