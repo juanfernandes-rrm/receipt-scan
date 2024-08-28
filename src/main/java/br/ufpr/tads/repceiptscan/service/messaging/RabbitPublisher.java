@@ -67,14 +67,14 @@ public class RabbitPublisher implements MessagePublisher {
 
     private ProductsDTO getMessageToCatalog(Receipt receipt) throws JsonProcessingException {
         List<ItemDTO> itemsDTO = new ArrayList<>();
-        receipt.getItems().forEach((item) -> {
+        receipt.getItemDetails().forEach((itemDetails) -> {
             ItemDTO itemDTO = new ItemDTO();
-            itemDTO.setName(item.getName());
-            itemDTO.setCode(item.getCode());
-            itemDTO.setAmount(item.getAmount());
-            itemDTO.setUnit(item.getUnit());
-            itemDTO.setUnitValue(item.getUnitValue());
-            itemDTO.setTotalValue(item.getTotalValue());
+            itemDTO.setName(itemDetails.getItem().getName());
+            itemDTO.setCode(itemDetails.getItem().getCode());
+            itemDTO.setAmount(itemDetails.getAmount());
+            itemDTO.setUnit(itemDetails.getUnit());
+            itemDTO.setUnitValue(itemDetails.getUnitValue());
+            itemDTO.setTotalValue(itemDetails.getTotalValue());
             itemsDTO.add(itemDTO);
         });
         ProductsDTO productsDTO = new ProductsDTO();
