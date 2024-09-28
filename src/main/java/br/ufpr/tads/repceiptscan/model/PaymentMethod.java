@@ -4,8 +4,10 @@ public enum PaymentMethod {
 
     CREDIT_CARD("CARTÃO DE CRÉDITO"),
     DEBIT_CARD("CARTÃO DE DÉBITO"),
+    DEBIT_CARD_2("CARTÃO DE DÉBITO 2"),
     CASH("DINHEIRO"),
-    PIX("PIX");
+    PIX("PIX"),
+    OTHERS("OUTROS");
 
     private final String method;
 
