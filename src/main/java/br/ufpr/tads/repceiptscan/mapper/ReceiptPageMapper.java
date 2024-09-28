@@ -7,6 +7,8 @@ import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+
 import static br.ufpr.tads.repceiptscan.utils.HtmlUtils.getElement;
 
 
@@ -50,10 +52,13 @@ public class ReceiptPageMapper {
     }
 
     private void mapTotalReceipt(Receipt receipt, Document document) {
+        var totalValue = formatValues.formatDecimalValue(document.select(TOTAL_RECEIPT_TOTAL_VALUE).text());
+        var valueToPay = formatValues.formatDecimalValue(document.select(TOTAL_RECEIPT_VALUE_TO_PAY).text());
+
         receipt.setTotalItems(Integer.parseInt(document.select(TOTAL_RECEIPT_TOTAL_ITEMS).text()));
-        receipt.setTotalValue(formatValues.formatDecimalValue(document.select(TOTAL_RECEIPT_TOTAL_VALUE).text()));
         receipt.setDiscount(formatValues.formatDecimalValue(document.select(TOTAL_RECEIPT_DISCOUNT).text()));
-        receipt.setValueToPay(formatValues.formatDecimalValue(document.select(TOTAL_RECEIPT_VALUE_TO_PAY).text()));
+        receipt.setValueToPay(valueToPay);
+        receipt.setTotalValue(totalValue.equals(BigDecimal.ZERO) ? valueToPay : totalValue);
         receipt.setValuePaid(formatValues.formatDecimalValue(document.select(TOTAL_RECEIPT_VALUE_PAID).text()));
         receipt.setPaymentMethod(PaymentMethod.fromValue(document.select(TOTAL_RECEIPT_PAYMENT_METHOD).text()));
         receipt.setTax(formatValues.formatDecimalValue(document.select(TOTAL_RECEIPT_TAX).text()));

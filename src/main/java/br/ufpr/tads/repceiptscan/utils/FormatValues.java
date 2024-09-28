@@ -6,6 +6,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
 @Component
 public class FormatValues {
 
@@ -17,6 +19,11 @@ public class FormatValues {
                     .replace(NON_BREAKING_SPACE, "")
                     .replace(".", "")
                     .replace(",", ".");
+
+            if(isBlank(value)) {
+                return BigDecimal.ZERO;
+            }
+
             return new BigDecimal(value);
         } catch (NumberFormatException e) {
             System.err.println("Erro ao converter valor monetário: " + e.getMessage());
