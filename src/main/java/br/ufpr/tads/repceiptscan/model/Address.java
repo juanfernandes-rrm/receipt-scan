@@ -12,10 +12,13 @@ public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+    @Column(length = 100)
     private String street;
+    @Column(length = 10)
     private String number;
+    @Column(length = 100)
     private String neighborhood;
-    private String city;
-    private String state;
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CITY_ID", nullable = false)
+    private City city;
 }

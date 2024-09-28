@@ -14,10 +14,12 @@ public class ReceiptMapper {
         ReceiptResponseDTO responseDTO = new ReceiptResponseDTO();
 
         responseDTO.setStore(mapStore(receipt.getStore()));
-        responseDTO.setItems(mapItems(receipt.getItems()));
+        responseDTO.setItems(mapItems(receipt.getItemDetails()));
         responseDTO.setTotalItems(receipt.getTotalItems());
         responseDTO.setTotalValue(receipt.getTotalValue());
-        responseDTO.setPaymentMethod(receipt.getPaymentMethod());
+        responseDTO.setDiscount(receipt.getDiscount());
+        responseDTO.setValueToPay(receipt.getValueToPay());
+        responseDTO.setPaymentMethod(receipt.getPaymentMethod().name());
         responseDTO.setValuePaid(receipt.getValuePaid());
         responseDTO.setTax(receipt.getTax());
         responseDTO.setGeneralInformation(mapGeneralInformation(receipt.getGeneralInformation()));
@@ -27,6 +29,7 @@ public class ReceiptMapper {
 
     private StoreDTO mapStore(Store store) {
         StoreDTO storeDTO = new StoreDTO();
+        storeDTO.setId(store.getId());
         storeDTO.setName(store.getName());
         storeDTO.setCNPJ(store.getCNPJ());
         storeDTO.setAddress(mapAddress(store.getAddress()));
@@ -38,17 +41,17 @@ public class ReceiptMapper {
         addressDTO.setStreet(address.getStreet());
         addressDTO.setNumber(address.getNumber());
         addressDTO.setNeighborhood(address.getNeighborhood());
-        addressDTO.setCity(address.getCity());
-        addressDTO.setState(address.getState());
+        addressDTO.setCity(address.getCity().getName());
+        addressDTO.setState(address.getCity().getState().name());
         return addressDTO;
     }
 
-    private List<ItemDTO> mapItems(List<Item> items) {
+    private List<ItemDTO> mapItems(List<ItemDetails> items) {
         List<ItemDTO> itemDTOS = new ArrayList<>();
         items.forEach(item -> {
             ItemDTO itemDTO = new ItemDTO();
-            itemDTO.setName(item.getName());
-            itemDTO.setCode(item.getCode());
+            itemDTO.setName(item.getItem().getName());
+            itemDTO.setCode(item.getItem().getCode());
             itemDTO.setAmount(item.getAmount());
             itemDTO.setUnit(item.getUnit());
             itemDTO.setUnitValue(item.getUnitValue());
