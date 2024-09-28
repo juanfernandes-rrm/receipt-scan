@@ -21,6 +21,8 @@ public class Receipt {
     private List<ItemDetails> itemDetails;
     private Integer totalItems;
     private BigDecimal totalValue;
+    private BigDecimal discount;
+    private BigDecimal valueToPay;
     private PaymentMethod paymentMethod;
     private BigDecimal valuePaid;
     private BigDecimal tax;

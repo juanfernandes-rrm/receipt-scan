@@ -15,6 +15,8 @@ public class ReceiptResponseDTO {
     private List<ItemDTO> items;
     private Integer totalItems;
     private BigDecimal totalValue;
+    private BigDecimal discount;
+    private BigDecimal valueToPay;
     private String paymentMethod;
     private BigDecimal valuePaid;
     private BigDecimal tax;

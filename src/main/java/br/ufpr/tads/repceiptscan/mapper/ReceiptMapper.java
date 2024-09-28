@@ -17,6 +17,8 @@ public class ReceiptMapper {
         responseDTO.setItems(mapItems(receipt.getItemDetails()));
         responseDTO.setTotalItems(receipt.getTotalItems());
         responseDTO.setTotalValue(receipt.getTotalValue());
+        responseDTO.setDiscount(receipt.getDiscount());
+        responseDTO.setValueToPay(receipt.getValueToPay());
         responseDTO.setPaymentMethod(receipt.getPaymentMethod().name());
         responseDTO.setValuePaid(receipt.getValuePaid());
         responseDTO.setTax(receipt.getTax());
