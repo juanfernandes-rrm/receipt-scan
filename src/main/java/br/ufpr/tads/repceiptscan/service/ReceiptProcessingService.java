@@ -41,7 +41,7 @@ public class ReceiptProcessingService {
 
         Receipt receipt = receiptScrapingService.scrapeReceipt(url);
 
-        storeService.saveOrGetStore(receipt.getStore());
+        storeService.saveOrGetStore(receipt);
         authorizationProtocolRepository.save(receipt.getGeneralInformation().getAuthorizationProtocol());
         issuanceRepository.save(receipt.getGeneralInformation().getIssuance());
         generalInformationRepository.save(receipt.getGeneralInformation());
