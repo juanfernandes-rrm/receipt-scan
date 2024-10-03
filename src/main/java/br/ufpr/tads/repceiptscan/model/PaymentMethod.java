@@ -7,6 +7,8 @@ public enum PaymentMethod {
     DEBIT_CARD_2("CARTÃO DE DÉBITO 2"),
     CASH("DINHEIRO"),
     PIX("PIX"),
+
+    FOOD_VOUCHER("VALE ALIMENTAÇÃO"),
     OTHERS("OUTROS");
 
     private final String method;
@@ -25,7 +27,7 @@ public enum PaymentMethod {
                 return paymentMethod;
             }
         }
-        throw new IllegalArgumentException("Unknown payment method: " + value);
+        return OTHERS;
     }
 
 }
