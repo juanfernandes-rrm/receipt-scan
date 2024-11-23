@@ -9,6 +9,9 @@ import br.ufpr.tads.repceiptscan.repository.ReceiptRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 @Service
 public class ReceiptProcessingService {
 
@@ -36,11 +39,13 @@ public class ReceiptProcessingService {
     @Autowired
     private ReceiptRepository receiptRepository;
 
-    public Receipt processReceipt(String url) {
+    public Receipt processReceipt(String url, UUID user) {
         receiptValidationService.validateReceipt(url);
 
         Receipt receipt = receiptScrapingService.scrapeReceipt(url);
 
+        receipt.setScannedBy(user);
+        receipt.setScannedAt(LocalDateTime.now());
         storeService.saveOrGetStore(receipt);
         authorizationProtocolRepository.save(receipt.getGeneralInformation().getAuthorizationProtocol());
         issuanceRepository.save(receipt.getGeneralInformation().getIssuance());
