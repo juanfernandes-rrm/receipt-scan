@@ -5,12 +5,16 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
 @ToString
 public class ReceiptResponseDTO {
+    private UUID scannedBy;
+    private LocalDateTime scannedAt;
     private StoreDTO store;
     private List<ItemDTO> items;
     private Integer totalItems;
