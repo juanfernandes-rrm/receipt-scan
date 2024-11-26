@@ -13,6 +13,8 @@ public class ReceiptMapper {
     public ReceiptResponseDTO map(Receipt receipt) {
         ReceiptResponseDTO responseDTO = new ReceiptResponseDTO();
 
+        responseDTO.setScannedBy(receipt.getScannedBy());
+        responseDTO.setScannedAt(receipt.getScannedAt());
         responseDTO.setStore(mapStore(receipt.getStore()));
         responseDTO.setItems(mapItems(receipt.getItemDetails()));
         responseDTO.setTotalItems(receipt.getTotalItems());
@@ -24,6 +26,15 @@ public class ReceiptMapper {
         responseDTO.setTax(receipt.getTax());
         responseDTO.setGeneralInformation(mapGeneralInformation(receipt.getGeneralInformation()));
         responseDTO.setAccessKey(receipt.getAccessKey());
+        return responseDTO;
+    }
+
+    public ReceiptSummaryResponseDTO mapToReceiptSummary(Receipt receipt) {
+        ReceiptSummaryResponseDTO responseDTO = new ReceiptSummaryResponseDTO();
+
+        responseDTO.setScannedAt(receipt.getScannedAt());
+        responseDTO.setItems(mapItems(receipt.getItemDetails()));
+        responseDTO.setTotalValue(receipt.getTotalValue());
         return responseDTO;
     }
 
