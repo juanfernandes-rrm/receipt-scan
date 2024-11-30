@@ -10,21 +10,17 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity // Habilita o uso de @PreAuthorize
+@EnableMethodSecurity
 public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/public/**").permitAll() // Endpoints públicos
-                .anyRequest().authenticated()              // Exige autenticação para outros endpoints
-            )
-            .oauth2ResourceServer(oauth2 -> oauth2
-                .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())) // Configuração de JWT
-            );
-
-        return http.build();
+        return http.authorizeHttpRequests(authz -> authz
+                        .requestMatchers("/scan/receipts/*").permitAll()
+                        .anyRequest().authenticated())
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))
+                .build();
     }
 
     private JwtAuthenticationConverter jwtAuthenticationConverter() {
