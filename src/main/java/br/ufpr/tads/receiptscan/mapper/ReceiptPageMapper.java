@@ -3,6 +3,7 @@ package br.ufpr.tads.receiptscan.mapper;
 import br.ufpr.tads.receiptscan.model.PaymentMethod;
 import br.ufpr.tads.receiptscan.model.Receipt;
 import br.ufpr.tads.receiptscan.utils.FormatValues;
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -12,6 +13,7 @@ import java.math.BigDecimal;
 import static br.ufpr.tads.receiptscan.utils.HtmlUtils.getElement;
 
 
+@Slf4j
 @Component
 public class ReceiptPageMapper {
 
@@ -39,7 +41,8 @@ public class ReceiptPageMapper {
     @Autowired
     private GeneralInformationMapper generalInformationMapper;
 
-    public Receipt map(Document document) {
+    public Receipt map(Document document, String url) {
+        log.info("Mapping receipt from URL: {}", url);
         Receipt receipt = new Receipt();
 
         receipt.setItemDetails(itemDetailsMapper.mapItems(document));
@@ -48,6 +51,7 @@ public class ReceiptPageMapper {
         mapTotalReceipt(receipt, document);
         mapAccessKey(receipt, document);
 
+        log.info("Receipt mapped successfully");
         return receipt;
     }
 

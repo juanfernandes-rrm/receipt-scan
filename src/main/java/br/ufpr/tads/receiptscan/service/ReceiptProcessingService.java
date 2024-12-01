@@ -6,12 +6,14 @@ import br.ufpr.tads.receiptscan.repository.AuthorizationProtocolRepository;
 import br.ufpr.tads.receiptscan.repository.GeneralInformationRepository;
 import br.ufpr.tads.receiptscan.repository.IssuanceRepository;
 import br.ufpr.tads.receiptscan.repository.ReceiptRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Slf4j
 @Service
 public class ReceiptProcessingService {
 
@@ -40,6 +42,7 @@ public class ReceiptProcessingService {
     private ReceiptRepository receiptRepository;
 
     public Receipt processReceipt(String url, UUID user) {
+        log.info("Processing receipt {} scannedBy {}", url, user);
         receiptValidationService.validateReceipt(url);
 
         Receipt receipt = receiptScrapingService.scrapeReceipt(url);
@@ -52,7 +55,9 @@ public class ReceiptProcessingService {
         generalInformationRepository.save(receipt.getGeneralInformation());
         itemService.saveOrGetItemDetails(receipt);
 
-        return receiptRepository.save(receipt);
+        Receipt scannedReceipt = receiptRepository.save(receipt);
+        log.info("Receipt {} successfully scanned", url);
+        return scannedReceipt;
     }
 }
 
