@@ -16,7 +16,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/scan/receipts/*", "/scan/user-statistics").permitAll()
+                        .requestMatchers("/scan/receipts/*", "/scan/users-statistics").permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))
