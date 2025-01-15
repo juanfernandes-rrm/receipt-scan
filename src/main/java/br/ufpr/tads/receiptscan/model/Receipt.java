@@ -73,4 +73,10 @@ public class Receipt {
     @Column(name = "ACCESS_KEY")
     private String accessKey;
 
+    @Column(name = "CONSUMER_CPF")
+    private String consumerCpf;
+
+    @Column(name = "CONSUMER_NAME")
+    private String consumerName;
+
 }

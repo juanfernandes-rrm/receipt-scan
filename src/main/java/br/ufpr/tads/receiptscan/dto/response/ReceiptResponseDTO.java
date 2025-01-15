@@ -31,4 +31,6 @@ public class ReceiptResponseDTO {
     private String authorizationCode;
     private LocalDateTime authorizationDate;
     private String accessKey;
+    private String consumerCpf;
+    private String consumerName;
 }

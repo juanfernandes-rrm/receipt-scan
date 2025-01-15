@@ -33,6 +33,9 @@ public class ReceiptMapper {
         responseDTO.setIssuanceDate(receipt.getIssuanceDate());
         responseDTO.setAuthorizationCode(receipt.getAuthorizationCode());
         responseDTO.setAuthorizationDate(receipt.getAuthorizationDate());
+        responseDTO.setAccessKey(receipt.getAccessKey());
+        responseDTO.setConsumerCpf(receipt.getConsumerCpf());
+        responseDTO.setConsumerName(receipt.getConsumerName());
         return responseDTO;
     }
 
