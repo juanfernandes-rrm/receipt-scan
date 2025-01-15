@@ -28,6 +28,7 @@ public class ReceiptValidationService {
         String accessKey = accessKeyExtractor.extract(url);
         if (accessKey != null && receiptRepository.findByAccessKey(accessKey).isPresent()) {
             log.error("Receipt already scanned");
+            //TODO: Create a custom exception
             throw new RuntimeException("Receipt already scanned");
         }
     }
