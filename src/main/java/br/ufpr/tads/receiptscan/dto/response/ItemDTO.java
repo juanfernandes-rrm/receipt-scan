@@ -1,12 +1,10 @@
 package br.ufpr.tads.receiptscan.dto.response;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.math.BigDecimal;
 
-@Getter
-@Setter
+@Data
 public class ItemDTO {
     private String name;
     private String code;

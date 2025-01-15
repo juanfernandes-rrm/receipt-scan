@@ -1,12 +1,10 @@
 package br.ufpr.tads.receiptscan.dto.response;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.util.UUID;
 
-@Getter
-@Setter
+@Data
 public class StoreDTO {
     private UUID id;
     private String name;

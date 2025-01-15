@@ -14,7 +14,7 @@ public class ReceiptPublisher {
     private RabbitPublisher rabbitPublisher;
 
     public void publishReceipt(Receipt receipt) {
-        log.info("Publishing receipt: {}", receipt);
+        log.info("Publishing receipt: {}", receipt.getId());
         rabbitPublisher.publish(receipt);
     }
 
