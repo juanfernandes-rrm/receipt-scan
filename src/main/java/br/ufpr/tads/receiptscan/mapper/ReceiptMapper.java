@@ -1,7 +1,10 @@
 package br.ufpr.tads.receiptscan.mapper;
 
 import br.ufpr.tads.receiptscan.dto.response.*;
-import br.ufpr.tads.receiptscan.model.*;
+import br.ufpr.tads.receiptscan.model.Address;
+import br.ufpr.tads.receiptscan.model.ItemDetails;
+import br.ufpr.tads.receiptscan.model.Receipt;
+import br.ufpr.tads.receiptscan.model.Store;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -24,8 +27,12 @@ public class ReceiptMapper {
         responseDTO.setPaymentMethod(receipt.getPaymentMethod().name());
         responseDTO.setValuePaid(receipt.getValuePaid());
         responseDTO.setTax(receipt.getTax());
-        responseDTO.setGeneralInformation(mapGeneralInformation(receipt.getGeneralInformation()));
-        responseDTO.setAccessKey(receipt.getAccessKey());
+        responseDTO.setNumber(receipt.getNumber());
+        responseDTO.setSeries(receipt.getSeries());
+        responseDTO.setIssuer(receipt.getIssuer());
+        responseDTO.setIssuanceDate(receipt.getIssuanceDate());
+        responseDTO.setAuthorizationCode(receipt.getAuthorizationCode());
+        responseDTO.setAuthorizationDate(receipt.getAuthorizationDate());
         return responseDTO;
     }
 
@@ -70,30 +77,6 @@ public class ReceiptMapper {
             itemDTOS.add(itemDTO);
         });
         return itemDTOS;
-    }
-
-    private GeneralInformationDTO mapGeneralInformation(GeneralInformation generalInformation) {
-        GeneralInformationDTO generalInformationDTO = new GeneralInformationDTO();
-        generalInformationDTO.setNumber(generalInformation.getNumber());
-        generalInformationDTO.setSeries(generalInformation.getSeries());
-        generalInformationDTO.setIssuance(mapIssuance(generalInformation.getIssuance()));
-        generalInformationDTO.setAuthorizationProtocol(mapAuthorizationProtocol(generalInformation.getAuthorizationProtocol()));
-        return generalInformationDTO;
-    }
-
-
-    private IssuanceDTO mapIssuance(Issuance issuance) {
-        IssuanceDTO issuanceDTO = new IssuanceDTO();
-        issuanceDTO.setDate(issuance.getDate());
-        issuanceDTO.setIssuer(issuance.getIssuer());
-        return issuanceDTO;
-    }
-
-    private AuthorizationProtocolDTO mapAuthorizationProtocol(AuthorizationProtocol authorizationProtocol) {
-        AuthorizationProtocolDTO authorizationProtocolDTO = new AuthorizationProtocolDTO();
-        authorizationProtocolDTO.setCode(authorizationProtocol.getCode());
-        authorizationProtocolDTO.setDate(authorizationProtocol.getDate());
-        return authorizationProtocolDTO;
     }
 
 }

@@ -24,6 +24,11 @@ public class ReceiptResponseDTO {
     private String paymentMethod;
     private BigDecimal valuePaid;
     private BigDecimal tax;
-    private GeneralInformationDTO generalInformation;
+    private String number;
+    private String series;
+    private String issuer;
+    private LocalDateTime issuanceDate;
+    private String authorizationCode;
+    private LocalDateTime authorizationDate;
     private String accessKey;
 }

@@ -1,8 +1,6 @@
 package br.ufpr.tads.receiptscan.mapper;
 
-import br.ufpr.tads.receiptscan.model.AuthorizationProtocol;
-import br.ufpr.tads.receiptscan.model.GeneralInformation;
-import br.ufpr.tads.receiptscan.model.Issuance;
+import br.ufpr.tads.receiptscan.model.Receipt;
 import br.ufpr.tads.receiptscan.utils.FormatValues;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -25,29 +23,23 @@ public class GeneralInformationMapper {
     public static final String INFORMATION_ISSUANCE = SECTION_INFORMATION + " > div:nth-child(1) > ul > li > strong:nth-child(6)";
     public static final String INFORMATION_PROTOCOL = SECTION_INFORMATION + " > div:nth-child(1) > ul > li > strong:nth-child(9)";
 
-    public GeneralInformation mapGeneralInformation(Document document) {
-        GeneralInformation generalInformation = new GeneralInformation();
-        generalInformation.setNumber(getNextTextNodeFrom(document, INFORMATION_NUMBER));
-        generalInformation.setSeries(getNextTextNodeFrom(document, INFORMATION_SERIES));
-        generalInformation.setIssuance(extractIssuance(getNextTextNodeFrom(document, INFORMATION_ISSUANCE)));
-        generalInformation.setAuthorizationProtocol(extractAuthorizationProtocol(getNextTextNodeFrom(document, INFORMATION_PROTOCOL)));
-        return generalInformation;
+    public void mapGeneralInformation(Receipt receipt, Document document) {
+        receipt.setNumber(getNextTextNodeFrom(document, INFORMATION_NUMBER));
+        receipt.setSeries(getNextTextNodeFrom(document, INFORMATION_SERIES));
+        mapIssuanceInformation(receipt, getNextTextNodeFrom(document, INFORMATION_ISSUANCE));
+        mapAuthorizationInformation(receipt, getNextTextNodeFrom(document, INFORMATION_PROTOCOL));
     }
 
-    private Issuance extractIssuance(String issuanceString) {
-        Issuance issuance = new Issuance();
+    private void mapIssuanceInformation(Receipt receipt, String issuanceString) {
         String[] split = issuanceString.split(" ");
-        issuance.setDate(formatValues.formatDateTime(split[0] + split[1]));
-        issuance.setIssuer(split[4]);
-        return issuance;
+        receipt.setIssuanceDate(formatValues.formatDateTime(split[0] + split[1]));
+        receipt.setIssuer(split[4]);
     }
 
-    private AuthorizationProtocol extractAuthorizationProtocol(String protocol) {
-        AuthorizationProtocol authorizationProtocol = new AuthorizationProtocol();
+    private void mapAuthorizationInformation(Receipt receipt, String protocol) {
         String[] split = protocol.split(" ");
-        authorizationProtocol.setCode(split[0]);
-        authorizationProtocol.setDate(formatValues.formatDateTime(split[1] + split[2]));
-        return authorizationProtocol;
+        receipt.setAuthorizationCode(split[0]);
+        receipt.setAuthorizationDate(formatValues.formatDateTime(split[1] + split[2]));
     }
 
     private String getNextTextNodeFrom(Document document, String select) {

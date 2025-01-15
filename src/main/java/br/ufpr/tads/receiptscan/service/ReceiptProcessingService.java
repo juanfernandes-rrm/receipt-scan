@@ -2,9 +2,6 @@ package br.ufpr.tads.receiptscan.service;
 
 
 import br.ufpr.tads.receiptscan.model.Receipt;
-import br.ufpr.tads.receiptscan.repository.AuthorizationProtocolRepository;
-import br.ufpr.tads.receiptscan.repository.GeneralInformationRepository;
-import br.ufpr.tads.receiptscan.repository.IssuanceRepository;
 import br.ufpr.tads.receiptscan.repository.ReceiptRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,15 +27,6 @@ public class ReceiptProcessingService {
     private ItemService itemService;
 
     @Autowired
-    private GeneralInformationRepository generalInformationRepository;
-
-    @Autowired
-    private AuthorizationProtocolRepository authorizationProtocolRepository;
-
-    @Autowired
-    private IssuanceRepository issuanceRepository;
-
-    @Autowired
     private ReceiptRepository receiptRepository;
 
     public Receipt processReceipt(String url, UUID user) {
@@ -50,9 +38,6 @@ public class ReceiptProcessingService {
         receipt.setScannedBy(user);
         receipt.setScannedAt(LocalDateTime.now());
         storeService.saveOrGetStore(receipt);
-        authorizationProtocolRepository.save(receipt.getGeneralInformation().getAuthorizationProtocol());
-        issuanceRepository.save(receipt.getGeneralInformation().getIssuance());
-        generalInformationRepository.save(receipt.getGeneralInformation());
         itemService.saveOrGetItemDetails(receipt);
 
         Receipt scannedReceipt = receiptRepository.save(receipt);
