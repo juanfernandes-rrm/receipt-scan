@@ -11,10 +11,14 @@ import java.util.UUID;
 public class Item {
 
     @Id
+    @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    @Column(length = 150)
+
+    @Column(name = "NAME", length = 150)
     private String name;
+
+    @Column(name = "CODE")
     private String code;
 
 }

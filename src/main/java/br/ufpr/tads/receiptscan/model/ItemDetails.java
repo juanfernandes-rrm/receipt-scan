@@ -12,27 +12,28 @@ import java.util.UUID;
 public class ItemDetails {
 
     @Id
+    @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "item_id", nullable = false)
+    @JoinColumn(name = "ITEM_ID", nullable = false)
     private Item item;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "RECEIPT_ID", nullable = false)
     private Receipt receipt;
 
-    @Column(nullable = false)
+    @Column(name = "AMOUNT", nullable = false)
     private BigDecimal amount;
 
-    @Column(nullable = false)
+    @Column(name = "UNIT", nullable = false)
     private String unit;
 
-    @Column(nullable = false)
+    @Column(name = "UNIT_VALUE", nullable = false)
     private BigDecimal unitValue;
 
-    @Column(nullable = false)
+    @Column(name = "TOTAL_VALUE", nullable = false)
     private BigDecimal totalValue;
 
 }
