@@ -7,6 +7,7 @@ import br.ufpr.tads.receiptscan.dto.response.UserStatistics;
 import br.ufpr.tads.receiptscan.mapper.ReceiptMapper;
 import br.ufpr.tads.receiptscan.model.Receipt;
 import br.ufpr.tads.receiptscan.repository.ReceiptRepository;
+import br.ufpr.tads.receiptscan.service.messaging.ReceiptPublisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

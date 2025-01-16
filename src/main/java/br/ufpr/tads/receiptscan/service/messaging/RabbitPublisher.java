@@ -44,10 +44,11 @@ public class RabbitPublisher implements MessagePublisher {
             sendMessage(catalogExchangeName, catalogQueueName, getMessageToCatalog(receipt));
             sendMessage(userExchangeName, userQueueName, getMessageToUser(receipt));
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            log.error("Error while processing message to send to the queue", e);
         }
     }
 
+    //TODO: criar abstração para cada fila
     private StoreDTO getMessageToUser(Receipt receipt) throws JsonProcessingException {
         Store store = receipt.getStore();
         StoreDTO storeDTO = new StoreDTO();
@@ -65,6 +66,7 @@ public class RabbitPublisher implements MessagePublisher {
         return storeDTO;
     }
 
+    //TODO: criar abstração para cada fila
     private ProductsDTO getMessageToCatalog(Receipt receipt) throws JsonProcessingException {
         List<ItemDTO> itemsDTO = new ArrayList<>();
         receipt.getItemDetails().forEach((itemDetails) -> {
@@ -84,11 +86,13 @@ public class RabbitPublisher implements MessagePublisher {
         return productsDTO;
     }
 
+    //TODO: criar abstração para cada fila
     private void sendMessage(String exchangeName, String queueName, ProductsDTO payload){
         log.info("Notifying queue: {} of text {}", queueName, payload);
         rabbitTemplate.convertAndSend(exchangeName, queueName, payload);
     }
 
+    //TODO: criar abstração para cada fila
     private void sendMessage(String exchangeName, String queueName, StoreDTO payload){
         log.info("Notifying queue: {} of text {}", queueName, payload);
         rabbitTemplate.convertAndSend(exchangeName, queueName, payload);

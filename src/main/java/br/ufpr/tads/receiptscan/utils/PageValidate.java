@@ -1,5 +1,6 @@
 package br.ufpr.tads.receiptscan.utils;
 
+import br.ufpr.tads.receiptscan.exception.InvalidReceiptException;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Component;
@@ -19,7 +20,7 @@ public class PageValidate {
                 .filter(ERROR_MESSAGE::equals)
                 .ifPresent(error -> {
                     log.error("Invalid QR Code: {}", url);
-                    throw new RuntimeException("Invalid QR Code");
+                    throw new InvalidReceiptException("Invalid QR Code");
                 });
     }
 

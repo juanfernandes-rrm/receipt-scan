@@ -1,5 +1,8 @@
 package br.ufpr.tads.receiptscan.model;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public enum PaymentMethod {
 
     CREDIT_CARD("CARTÃO DE CRÉDITO"),
@@ -27,6 +30,7 @@ public enum PaymentMethod {
                 return paymentMethod;
             }
         }
+        log.warn("Payment method not found: {}", value);
         return OTHERS;
     }
 

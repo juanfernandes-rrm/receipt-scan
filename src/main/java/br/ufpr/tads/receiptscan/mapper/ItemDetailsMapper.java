@@ -7,7 +7,6 @@ import br.ufpr.tads.receiptscan.utils.HtmlUtils;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -18,9 +17,6 @@ import static br.ufpr.tads.receiptscan.utils.HtmlUtils.getElement;
 
 @Component
 public class ItemDetailsMapper {
-
-    @Autowired
-    private FormatValues formatValues;
 
     private static final String CLASS_NAME = ".txtTit2";
     private static final String CLASS_CODE = ".RCod";
@@ -42,10 +38,10 @@ public class ItemDetailsMapper {
         item.setName(getElement(elementItem, CLASS_NAME).text());
         item.setCode(extractItemCode(getElement(elementItem, CLASS_CODE).text()));
         itemDetails.setItem(item);
-        itemDetails.setAmount(formatValues.formatDecimalValue(getElement(elementItem, CLASS_AMOUNT).childNodes().get(2).toString()));
+        itemDetails.setAmount(FormatValues.formatDecimalValue(getElement(elementItem, CLASS_AMOUNT).childNodes().get(2).toString()));
         itemDetails.setUnit(getElement(elementItem, CLASS_UNIT).childNodes().get(2).toString().trim());
-        itemDetails.setUnitValue(formatValues.formatDecimalValue(getElement(elementItem, CLASS_UNIT_VALUE).childNodes().get(2).toString()));
-        itemDetails.setTotalValue(formatValues.formatDecimalValue(getElement(elementItem, CLASS_TOTAL_VALUE).text()));
+        itemDetails.setUnitValue(FormatValues.formatDecimalValue(getElement(elementItem, CLASS_UNIT_VALUE).childNodes().get(2).toString()));
+        itemDetails.setTotalValue(FormatValues.formatDecimalValue(getElement(elementItem, CLASS_TOTAL_VALUE).text()));
         return itemDetails;
     }
 

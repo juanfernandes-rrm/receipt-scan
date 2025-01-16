@@ -29,9 +29,6 @@ public class ReceiptPageMapper {
     private static final String TOTAL_RECEIPT_TAX = SECTION_TOTAL_RECEIPT + " > div#linhaTotal:contains(Informação dos Tributos Totais Incidentes (Lei Federal 12.741/2012) R$) > span";
 
     @Autowired
-    private FormatValues formatValues;
-
-    @Autowired
     private ItemDetailsMapper itemDetailsMapper;
 
     @Autowired
@@ -55,16 +52,16 @@ public class ReceiptPageMapper {
     }
 
     private void mapTotalReceipt(Receipt receipt, Document document) {
-        var totalValue = formatValues.formatDecimalValue(document.select(TOTAL_RECEIPT_TOTAL_VALUE).text());
-        var valueToPay = formatValues.formatDecimalValue(document.select(TOTAL_RECEIPT_VALUE_TO_PAY).text());
+        var totalValue = FormatValues.formatDecimalValue(document.select(TOTAL_RECEIPT_TOTAL_VALUE).text());
+        var valueToPay = FormatValues.formatDecimalValue(document.select(TOTAL_RECEIPT_VALUE_TO_PAY).text());
 
         receipt.setTotalItems(Integer.parseInt(document.select(TOTAL_RECEIPT_TOTAL_ITEMS).text()));
-        receipt.setDiscount(formatValues.formatDecimalValue(document.select(TOTAL_RECEIPT_DISCOUNT).text()));
+        receipt.setDiscount(FormatValues.formatDecimalValue(document.select(TOTAL_RECEIPT_DISCOUNT).text()));
         receipt.setValueToPay(valueToPay);
-        receipt.setTotalValue(totalValue.equals(BigDecimal.ZERO) ? valueToPay : totalValue);
-        receipt.setValuePaid(formatValues.formatDecimalValue(document.select(TOTAL_RECEIPT_VALUE_PAID).text()));
+        receipt.setTotalValue(BigDecimal.ZERO.equals(totalValue) ? valueToPay : totalValue);
+        receipt.setValuePaid(FormatValues.formatDecimalValue(document.select(TOTAL_RECEIPT_VALUE_PAID).text()));
         receipt.setPaymentMethod(PaymentMethod.fromValue(document.select(TOTAL_RECEIPT_PAYMENT_METHOD).text()));
-        receipt.setTax(formatValues.formatDecimalValue(document.select(TOTAL_RECEIPT_TAX).text()));
+        receipt.setTax(FormatValues.formatDecimalValue(document.select(TOTAL_RECEIPT_TAX).text()));
     }
 
     private void mapAccessKey(Receipt receipt, Document document) {

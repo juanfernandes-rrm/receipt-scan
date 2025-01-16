@@ -1,5 +1,6 @@
 package br.ufpr.tads.receiptscan.utils;
 
+import br.ufpr.tads.receiptscan.exception.InvalidReceiptException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +13,7 @@ public class ReceiptURLValidate {
     public void validate(String url) {
         if (!url.startsWith(URL_PATTERN)) {
             log.error("Invalid URL: {}", url);
-            throw new RuntimeException("Invalid URL");
+            throw new InvalidReceiptException(String.format("URL %s is invalid", url));
         }
     }
 

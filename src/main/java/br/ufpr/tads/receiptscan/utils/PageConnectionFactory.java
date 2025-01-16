@@ -1,5 +1,6 @@
 package br.ufpr.tads.receiptscan.utils;
 
+import br.ufpr.tads.receiptscan.exception.InvalidReceiptException;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -13,16 +14,12 @@ public class PageConnectionFactory {
     public HttpURLConnection getConnection(String URL){
         try {
             URL obj = new URL(URL);
-            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-            con.setRequestProperty("User-Agent", "Mozilla/5.0");
-            System.out.println("Response code: " + con.getResponseCode());
-            return con;
+            return (HttpURLConnection) obj.openConnection();
         } catch (MalformedURLException e) {
-            System.out.println("URL inválida: "+e.getMessage());
+            throw new InvalidReceiptException("URL is invalid: " + e.getMessage());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return null;
     }
 
 }

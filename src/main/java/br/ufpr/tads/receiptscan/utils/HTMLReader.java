@@ -15,13 +15,11 @@ public class HTMLReader {
 
 
     public Document getDocument(HttpURLConnection connection) {
-        String html;
         try {
-            html = getHTML(connection.getInputStream());
+            return Jsoup.parse(getHTML(connection.getInputStream()));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Error parsing document: " + e.getMessage());
         }
-        return Jsoup.parse(html);
     }
 
     private String getHTML(InputStream inputStream) {
@@ -35,7 +33,7 @@ public class HTMLReader {
             in.close();
             return response.toString();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Error reading HTML: " + e.getMessage());
         }
     }
 

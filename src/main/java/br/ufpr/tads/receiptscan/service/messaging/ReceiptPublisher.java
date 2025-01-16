@@ -1,7 +1,6 @@
-package br.ufpr.tads.receiptscan.service;
+package br.ufpr.tads.receiptscan.service.messaging;
 
 import br.ufpr.tads.receiptscan.model.Receipt;
-import br.ufpr.tads.receiptscan.service.messaging.RabbitPublisher;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

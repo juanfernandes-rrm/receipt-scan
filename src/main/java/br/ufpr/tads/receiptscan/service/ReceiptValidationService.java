@@ -1,5 +1,6 @@
 package br.ufpr.tads.receiptscan.service;
 
+import br.ufpr.tads.receiptscan.exception.ReceiptAlreadyScannedException;
 import br.ufpr.tads.receiptscan.repository.ReceiptRepository;
 import br.ufpr.tads.receiptscan.utils.ReceiptURLValidate;
 import lombok.extern.slf4j.Slf4j;
@@ -27,9 +28,8 @@ public class ReceiptValidationService {
     private void validateReceiptWasNotScanned(String url) {
         String accessKey = accessKeyExtractor.extract(url);
         if (accessKey != null && receiptRepository.findByAccessKey(accessKey).isPresent()) {
-            log.error("Receipt already scanned");
-            //TODO: Create a custom exception
-            throw new RuntimeException("Receipt already scanned");
+            log.error("Receipt from URL {} has already been scanned", url);
+            throw new ReceiptAlreadyScannedException(String.format("Receipt from URL %s has already been scanned", url));
         }
     }
 }
