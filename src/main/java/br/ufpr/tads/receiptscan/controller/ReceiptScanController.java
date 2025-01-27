@@ -27,37 +27,25 @@ public class ReceiptScanController {
     @PreAuthorize("hasAnyRole('ADMIN','CUSTOMER')")
     @PostMapping
     public ResponseEntity<?> scan(@RequestBody @Valid ReceiptRequestDTO receiptRequestDTO) {
-        try {
-            log.info("Scanning receipt for user with keycloakId {}", getUser());
-            return ResponseEntity.ok(receiptScanService.scan(receiptRequestDTO, getUser()));
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Erro interno: " + e.getMessage());
-        }
+        log.info("Scanning receipt for user with keycloakId {}", getUser());
+        return ResponseEntity.ok(receiptScanService.scan(receiptRequestDTO, getUser()));
     }
 
     @GetMapping("/receipts/{keycloakId}")
     public ResponseEntity<?> getScannedReceipts(@PathVariable UUID keycloakId,
                                                 @RequestParam("page") int page, @RequestParam("size") int size,
                                                 @RequestParam("sortDirection") Sort.Direction sortDirection, @RequestParam("sortBy") String sortBy) {
-        try {
-            log.info("Getting scanned receipts for user with keycloakId {}", keycloakId);
-            Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sortBy));
-            return ResponseEntity.ok(receiptScanService.getScannedReceipts(keycloakId, pageable));
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Erro interno: " + e.getMessage());
-        }
+        log.info("Getting scanned receipts for user with keycloakId {}", keycloakId);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sortBy));
+        return ResponseEntity.ok(receiptScanService.getScannedReceipts(keycloakId, pageable));
     }
 
     @GetMapping("/users-statistics")
     public ResponseEntity<?> getUserStatistics(@RequestParam("page") int page, @RequestParam("size") int size,
                                                @RequestParam("sortDirection") Sort.Direction sortDirection, @RequestParam("sortBy") String sortBy) {
-        try {
-            log.info("Getting users statistics");
-            Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sortBy));
-            return ResponseEntity.ok(receiptScanService.getUserStatistics(pageable));
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Erro interno: " + e.getMessage());
-        }
+        log.info("Getting users statistics");
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sortBy));
+        return ResponseEntity.ok(receiptScanService.getUserStatistics(pageable));
     }
 
     private UUID getUser() {
