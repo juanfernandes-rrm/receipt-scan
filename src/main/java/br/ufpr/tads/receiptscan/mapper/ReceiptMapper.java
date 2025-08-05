@@ -39,15 +39,6 @@ public class ReceiptMapper {
         return responseDTO;
     }
 
-    public ReceiptSummaryResponseDTO mapToReceiptSummary(Receipt receipt) {
-        ReceiptSummaryResponseDTO responseDTO = new ReceiptSummaryResponseDTO();
-
-        responseDTO.setScannedAt(receipt.getScannedAt());
-        responseDTO.setItems(mapItems(receipt.getItemDetails()));
-        responseDTO.setTotalValue(receipt.getTotalValue());
-        return responseDTO;
-    }
-
     private StoreDTO mapStore(Store store) {
         StoreDTO storeDTO = new StoreDTO();
         storeDTO.setId(store.getId());
