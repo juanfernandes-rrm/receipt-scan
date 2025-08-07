@@ -1,6 +1,6 @@
 package br.ufpr.tads.receiptscan.mapper;
 
-import br.ufpr.tads.receiptscan.model.Receipt;
+import br.ufpr.tads.receiptscan.model.ProcessedReceipt;
 import br.ufpr.tads.receiptscan.utils.FormatValues;
 import br.ufpr.tads.receiptscan.utils.HtmlUtils;
 import org.jsoup.nodes.Document;
@@ -17,7 +17,7 @@ public class GeneralInformationMapper {
     private static final String CONSUMER_CPF = SECTION_INFORMATION + "> div:nth-child(3) > ul > li > strong:contains(CPF:)";
     private static final String CONSUMER_NAME = SECTION_INFORMATION + "> div:nth-child(3) > ul > li > strong:contains(Nome:)";
 
-    public void mapGeneralInformation(Receipt receipt, Document document) {
+    public void mapGeneralInformation(ProcessedReceipt receipt, Document document) {
         receipt.setNumber(HtmlUtils.getNextTextNodeFrom(document, INFORMATION_NUMBER));
         receipt.setSeries(HtmlUtils.getNextTextNodeFrom(document, INFORMATION_SERIES));
         mapIssuanceInformation(receipt, HtmlUtils.getNextTextNodeFrom(document, INFORMATION_ISSUANCE));
@@ -26,13 +26,13 @@ public class GeneralInformationMapper {
         receipt.setConsumerName(HtmlUtils.getNullableNextTextNodeFrom(document, CONSUMER_NAME));
     }
 
-    private void mapIssuanceInformation(Receipt receipt, String issuanceString) {
+    private void mapIssuanceInformation(ProcessedReceipt receipt, String issuanceString) {
         String[] split = issuanceString.split("-");
         receipt.setIssuanceDate(FormatValues.formatDateTime(split[0].replace(" ", "")));
         receipt.setIssuer(split[1].trim());
     }
 
-    private void mapAuthorizationInformation(Receipt receipt, String protocol) {
+    private void mapAuthorizationInformation(ProcessedReceipt receipt, String protocol) {
         String[] split = protocol.split(" ");
         receipt.setAuthorizationCode(split[0]);
         receipt.setAuthorizationDate(FormatValues.formatDateTime(split[1] + split[2]));

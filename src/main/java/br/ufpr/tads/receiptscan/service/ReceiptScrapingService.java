@@ -1,7 +1,7 @@
 package br.ufpr.tads.receiptscan.service;
 
 import br.ufpr.tads.receiptscan.mapper.ReceiptPageMapper;
-import br.ufpr.tads.receiptscan.model.Receipt;
+import br.ufpr.tads.receiptscan.model.ProcessedReceipt;
 import br.ufpr.tads.receiptscan.utils.HTMLReader;
 import br.ufpr.tads.receiptscan.utils.PageConnectionFactory;
 import br.ufpr.tads.receiptscan.utils.PageValidate;
@@ -26,7 +26,7 @@ public class ReceiptScrapingService {
     @Autowired
     private ReceiptPageMapper receiptPageMapper;
 
-    public Receipt scrapeReceipt(String url) {
+    public ProcessedReceipt scrapeReceipt(String url) {
         HttpURLConnection connection = pageConnectionFactory.getConnection(url);
         Document document = htmlReader.getDocument(connection);
         pageValidate.validatePage(document, url);

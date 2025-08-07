@@ -1,10 +1,9 @@
 package br.ufpr.tads.receiptscan.mapper;
 
-import br.ufpr.tads.receiptscan.dto.response.*;
-import br.ufpr.tads.receiptscan.model.Address;
-import br.ufpr.tads.receiptscan.model.ItemDetails;
-import br.ufpr.tads.receiptscan.model.Receipt;
-import br.ufpr.tads.receiptscan.model.Store;
+import br.ufpr.tads.receiptscan.dto.response.ProcessedItemDTO;
+import br.ufpr.tads.receiptscan.dto.response.ProcessedReceiptResponseDTO;
+import br.ufpr.tads.receiptscan.model.ProcessedItem;
+import br.ufpr.tads.receiptscan.model.ProcessedReceipt;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -13,13 +12,15 @@ import java.util.List;
 @Component
 public class ReceiptMapper {
 
-    public ReceiptResponseDTO map(Receipt receipt) {
-        ReceiptResponseDTO responseDTO = new ReceiptResponseDTO();
+    public ProcessedReceiptResponseDTO map(ProcessedReceipt receipt) {
+        ProcessedReceiptResponseDTO responseDTO = new ProcessedReceiptResponseDTO();
 
-        responseDTO.setScannedBy(receipt.getScannedBy());
+        responseDTO.setId(receipt.getId());
         responseDTO.setScannedAt(receipt.getScannedAt());
-        responseDTO.setStore(mapStore(receipt.getStore()));
-        responseDTO.setItems(mapItems(receipt.getItemDetails()));
+        responseDTO.setStoreName(receipt.getStoreName());
+        responseDTO.setStoreCnpj(receipt.getStoreCnpj());
+        responseDTO.setStoreAddress(receipt.getStoreAddress());
+        responseDTO.setItems(mapItems(receipt.getItems()));
         responseDTO.setTotalItems(receipt.getTotalItems());
         responseDTO.setTotalValue(receipt.getTotalValue());
         responseDTO.setDiscount(receipt.getDiscount());
@@ -39,47 +40,20 @@ public class ReceiptMapper {
         return responseDTO;
     }
 
-    public ReceiptSummaryResponseDTO mapToReceiptSummary(Receipt receipt) {
-        ReceiptSummaryResponseDTO responseDTO = new ReceiptSummaryResponseDTO();
-
-        responseDTO.setScannedAt(receipt.getScannedAt());
-        responseDTO.setItems(mapItems(receipt.getItemDetails()));
-        responseDTO.setTotalValue(receipt.getTotalValue());
-        return responseDTO;
-    }
-
-    private StoreDTO mapStore(Store store) {
-        StoreDTO storeDTO = new StoreDTO();
-        storeDTO.setId(store.getId());
-        storeDTO.setName(store.getName());
-        storeDTO.setCNPJ(store.getCNPJ());
-        storeDTO.setAddress(mapAddress(store.getAddress()));
-        return storeDTO;
-    }
-
-    private AddressDTO mapAddress(Address address) {
-        AddressDTO addressDTO = new AddressDTO();
-        addressDTO.setStreet(address.getStreet());
-        addressDTO.setNumber(address.getNumber());
-        addressDTO.setNeighborhood(address.getNeighborhood());
-        addressDTO.setCity(address.getCity().getName());
-        addressDTO.setState(address.getCity().getState().name());
-        return addressDTO;
-    }
-
-    private List<ItemDTO> mapItems(List<ItemDetails> items) {
-        List<ItemDTO> itemDTOS = new ArrayList<>();
+    private List<ProcessedItemDTO> mapItems(List<ProcessedItem> items) {
+        List<ProcessedItemDTO> processedItemDTOS = new ArrayList<>();
         items.forEach(item -> {
-            ItemDTO itemDTO = new ItemDTO();
-            itemDTO.setName(item.getItem().getName());
-            itemDTO.setCode(item.getItem().getCode());
-            itemDTO.setAmount(item.getAmount());
-            itemDTO.setUnit(item.getUnit());
-            itemDTO.setUnitValue(item.getUnitValue());
-            itemDTO.setTotalValue(item.getTotalValue());
-            itemDTOS.add(itemDTO);
+            ProcessedItemDTO processedItemDTO = new ProcessedItemDTO();
+            processedItemDTO.setId(item.getId());
+            processedItemDTO.setProductDescription(item.getProductDescription());
+            processedItemDTO.setProductCode(item.getProductCode());
+            processedItemDTO.setQuantity(item.getQuantity());
+            processedItemDTO.setUnit(item.getUnit());
+            processedItemDTO.setUnitValue(item.getUnitValue());
+            processedItemDTO.setTotalValue(item.getTotalValue());
+            processedItemDTOS.add(processedItemDTO);
         });
-        return itemDTOS;
+        return processedItemDTOS;
     }
 
 }

@@ -1,14 +1,12 @@
 package br.ufpr.tads.receiptscan.service;
 
 
-import br.ufpr.tads.receiptscan.model.Receipt;
-import br.ufpr.tads.receiptscan.repository.ReceiptRepository;
+import br.ufpr.tads.receiptscan.model.ProcessedReceipt;
+import br.ufpr.tads.receiptscan.repository.ProcessedItemRepository;
+import br.ufpr.tads.receiptscan.repository.ProcessedReceiptRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -21,26 +19,18 @@ public class ReceiptProcessingService {
     private ReceiptValidationService receiptValidationService;
 
     @Autowired
-    private StoreService storeService;
+    private ProcessedItemRepository processedItemRepository;
 
     @Autowired
-    private ItemService itemService;
+    private ProcessedReceiptRepository processedReceiptRepository;
 
-    @Autowired
-    private ReceiptRepository receiptRepository;
-
-    public Receipt processReceipt(String url, UUID user) {
-        log.info("Processing receipt {} scannedBy {}", url, user);
+    public ProcessedReceipt processReceipt(String url) {
+        log.info("Processing receipt {}", url);
         receiptValidationService.validateReceipt(url);
 
-        Receipt receipt = receiptScrapingService.scrapeReceipt(url);
+        ProcessedReceipt receipt = receiptScrapingService.scrapeReceipt(url);
+        ProcessedReceipt scannedReceipt = processedReceiptRepository.save(receipt);
 
-        receipt.setScannedBy(user);
-        receipt.setScannedAt(LocalDateTime.now());
-        storeService.saveOrGetStore(receipt);
-        itemService.saveOrGetItemDetails(receipt);
-
-        Receipt scannedReceipt = receiptRepository.save(receipt);
         log.info("Receipt {} successfully scanned", url);
         return scannedReceipt;
     }
