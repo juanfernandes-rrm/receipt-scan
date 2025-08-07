@@ -10,25 +10,28 @@ import java.util.UUID;
 
 @Data
 @Entity
-@Table(name = "RECEIPT")
-public class Receipt {
+@Table(name = "PROCESSED_RECEIPT")
+public class ProcessedReceipt {
 
     @Id
     @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "SCANNED_BY")
-    private UUID scannedBy;
-
     @Column(name = "SCANNED_AT")
     private LocalDateTime scannedAt;
 
-    @ManyToOne
-    private Store store;
+    @Column(name = "STORE_CNPJ")
+    private String storeCnpj;
+
+    @Column(name = "STORE_NAME")
+    private String storeName;
+
+    @Column(name = "STORE_ADDRESS")
+    private String storeAddress;
 
     @OneToMany(mappedBy = "receipt", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ItemDetails> itemDetails;
+    private List<ProcessedItem> items;
 
     @Column(name = "TOTAL_ITEMS")
     private Integer totalItems;

@@ -1,6 +1,6 @@
 package br.ufpr.tads.receiptscan.service.messaging;
 
-import br.ufpr.tads.receiptscan.model.Receipt;
+import br.ufpr.tads.receiptscan.model.ProcessedReceipt;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +12,7 @@ public class ReceiptPublisher {
     @Autowired
     private RabbitPublisher rabbitPublisher;
 
-    public void publishReceipt(Receipt receipt) {
+    public void publishReceipt(ProcessedReceipt receipt) {
         log.info("Publishing receipt: {}", receipt.getId());
         rabbitPublisher.publish(receipt);
     }

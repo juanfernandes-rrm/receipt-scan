@@ -12,11 +12,13 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
-public class ReceiptResponseDTO {
-    private UUID scannedBy;
+public class ProcessedReceiptResponseDTO {
+    private UUID id;
     private LocalDateTime scannedAt;
-    private StoreDTO store;
-    private List<ItemDTO> items;
+    private String storeCnpj;
+    private String storeName;
+    private String storeAddress;
+    private List<ProcessedItemDTO> items;
     private Integer totalItems;
     private BigDecimal totalValue;
     private BigDecimal discount;

@@ -1,7 +1,7 @@
 package br.ufpr.tads.receiptscan.mapper;
 
 import br.ufpr.tads.receiptscan.model.PaymentMethod;
-import br.ufpr.tads.receiptscan.model.Receipt;
+import br.ufpr.tads.receiptscan.model.ProcessedReceipt;
 import br.ufpr.tads.receiptscan.utils.FormatValues;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.nodes.Document;
@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 import static br.ufpr.tads.receiptscan.utils.HtmlUtils.getElement;
 
@@ -29,7 +30,7 @@ public class ReceiptPageMapper {
     private static final String TOTAL_RECEIPT_TAX = SECTION_TOTAL_RECEIPT + " > div#linhaTotal:contains(Informação dos Tributos Totais Incidentes (Lei Federal 12.741/2012) R$) > span";
 
     @Autowired
-    private ItemDetailsMapper itemDetailsMapper;
+    private ItemMapper itemMapper;
 
     @Autowired
     private StoreMapper storeMapper;
@@ -37,12 +38,13 @@ public class ReceiptPageMapper {
     @Autowired
     private GeneralInformationMapper generalInformationMapper;
 
-    public Receipt map(Document document, String url) {
+    public ProcessedReceipt map(Document document, String url) {
         log.info("Mapping receipt from URL: {}", url);
-        Receipt receipt = new Receipt();
+        ProcessedReceipt receipt = new ProcessedReceipt();
+        receipt.setScannedAt(LocalDateTime.now());
 
-        receipt.setItemDetails(itemDetailsMapper.mapItems(document));
-        receipt.setStore(storeMapper.mapStore(document));
+        itemMapper.mapItems(receipt, document);
+        storeMapper.mapStore(receipt, document);
         generalInformationMapper.mapGeneralInformation(receipt, document);
         mapTotalReceipt(receipt, document);
         mapAccessKey(receipt, document);
@@ -51,7 +53,7 @@ public class ReceiptPageMapper {
         return receipt;
     }
 
-    private void mapTotalReceipt(Receipt receipt, Document document) {
+    private void mapTotalReceipt(ProcessedReceipt receipt, Document document) {
         var totalValue = FormatValues.formatDecimalValue(document.select(TOTAL_RECEIPT_TOTAL_VALUE).text());
         var valueToPay = FormatValues.formatDecimalValue(document.select(TOTAL_RECEIPT_VALUE_TO_PAY).text());
 
@@ -64,7 +66,7 @@ public class ReceiptPageMapper {
         receipt.setTax(FormatValues.formatDecimalValue(document.select(TOTAL_RECEIPT_TAX).text()));
     }
 
-    private void mapAccessKey(Receipt receipt, Document document) {
+    private void mapAccessKey(ProcessedReceipt receipt, Document document) {
         receipt.setAccessKey(getElement(document, SPAN_ACCESS_KEY).text().replaceAll(" ", ""));
     }
 }

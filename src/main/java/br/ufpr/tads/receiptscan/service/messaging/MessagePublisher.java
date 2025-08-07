@@ -1,10 +1,10 @@
 package br.ufpr.tads.receiptscan.service.messaging;
 
 
-import br.ufpr.tads.receiptscan.model.Receipt;
+import br.ufpr.tads.receiptscan.model.ProcessedReceipt;
 
 public interface MessagePublisher {
 
-    void publish(Receipt receipt);
+    void publish(ProcessedReceipt receipt);
 
 }

@@ -1,7 +1,7 @@
 package br.ufpr.tads.receiptscan.service;
 
 import br.ufpr.tads.receiptscan.exception.ReceiptAlreadyScannedException;
-import br.ufpr.tads.receiptscan.repository.ReceiptRepository;
+import br.ufpr.tads.receiptscan.repository.ProcessedReceiptRepository;
 import br.ufpr.tads.receiptscan.utils.ReceiptURLValidate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ public class ReceiptValidationService {
     private ReceiptURLValidate receiptURLValidate;
 
     @Autowired
-    private ReceiptRepository receiptRepository;
+    private ProcessedReceiptRepository processedReceiptRepository;
 
     @Autowired
     private AccessKeyExtractor accessKeyExtractor;
@@ -27,7 +27,7 @@ public class ReceiptValidationService {
 
     private void validateReceiptWasNotScanned(String url) {
         String accessKey = accessKeyExtractor.extract(url);
-        if (accessKey != null && receiptRepository.findByAccessKey(accessKey).isPresent()) {
+        if (accessKey != null && processedReceiptRepository.findByAccessKey(accessKey).isPresent()) {
             log.error("Receipt from URL {} has already been scanned", url);
             throw new ReceiptAlreadyScannedException(String.format("Receipt from URL %s has already been scanned", url));
         }
