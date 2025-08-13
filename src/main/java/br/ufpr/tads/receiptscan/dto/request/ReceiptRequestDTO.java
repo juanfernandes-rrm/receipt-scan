@@ -1,9 +1,13 @@
 package br.ufpr.tads.receiptscan.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ReceiptRequestDTO {
 
     @NotBlank(message = "NFE Url is mandatory")
