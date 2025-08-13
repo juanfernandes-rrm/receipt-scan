@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: ${db.url}?useSSL=false
+    username: ${db.username}
+    password: ${db.password}
+
+  rabbitmq:
+    host: localhost
+    port: ${rabbit.port}
+    username: guest
+    password: guest
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop

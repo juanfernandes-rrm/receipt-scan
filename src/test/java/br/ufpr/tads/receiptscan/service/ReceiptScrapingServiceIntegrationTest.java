@@ -2,7 +2,6 @@ package br.ufpr.tads.receiptscan.service;
 
 import br.ufpr.tads.receiptscan.mapper.ReceiptPageMapper;
 import br.ufpr.tads.receiptscan.model.ProcessedReceipt;
-import br.ufpr.tads.receiptscan.utils.HTMLReader;
 import br.ufpr.tads.receiptscan.utils.PageConnectionFactory;
 import br.ufpr.tads.receiptscan.utils.PageValidate;
 import org.jsoup.Jsoup;
@@ -31,9 +30,6 @@ public class ReceiptScrapingServiceIntegrationTest {
     private PageConnectionFactory pageConnectionFactory;
 
     @Autowired
-    private HTMLReader htmlReader;
-
-    @Autowired
     private PageValidate pageValidate;
 
     @Autowired
@@ -46,7 +42,7 @@ public class ReceiptScrapingServiceIntegrationTest {
 
     @BeforeEach
     void setUp() throws IOException {
-        ClassPathResource resource = new ClassPathResource("html/receipt.html");
+        ClassPathResource resource = new ClassPathResource("__files/receipt.html");
         try (InputStream inputStream = resource.getInputStream()) {
             String htmlContent = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
             this.testDocument = Jsoup.parse(htmlContent);
